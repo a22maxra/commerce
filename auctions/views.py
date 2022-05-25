@@ -3,8 +3,23 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
-from .models import User
+from .models import Category, User, Listing, Bid, Comment, Watch
+
+class ListForm(forms.Form):
+    # Load all the categories to select dropdown
+    categories = []
+    allCategories = Category.objects.all()
+    for i in allCategories:
+        categories.append((i.id, i.category))
+    title = forms.CharField(label="Titel", max_length=125)
+    description = forms.CharField(label="Description", max_length=280)
+    category = forms.ChoiceField(widget=forms.Select,
+    choices=categories)
+    image = forms.CharField(label="Image", max_length=280)
+    start = forms.IntegerField(label="Starting price", min_value=0)
+
 
 
 def index(request):
@@ -64,4 +79,17 @@ def register(request):
 
 
 def create(request):
-    return render(request, "auctions/create.html")
+    if request.method == "POST":
+        form = ListForm(request.POST)
+        if form.is_valid():
+            listing = form.cleaned_data
+            u = User.objects.get(pk=request.user.id)
+            c = Category.objects.get(pk=int(listing["category"]))
+            l = Listing(title=listing["title"], description=listing["description"],
+            image=listing["image"], start=int(listing["start"]), lister=u)
+            l.save()
+            l.category.add(c)
+            print(listing)
+    return render(request, "auctions/create.html", {
+    "form": ListForm()
+    })
