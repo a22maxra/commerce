@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.db.models import Max
+from .forms import ListingForm
 
 from .models import Category, User, Listing, Bid, Comment, Watch
 
@@ -78,18 +80,50 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+# def create(request):
+#     if request.method == "POST":
+#         form = ListForm(request.POST)
+#         if form.is_valid():
+#             listing = form.cleaned_data
+#             u = User.objects.get(pk=request.user.id)
+#             c = Category.objects.get(pk=int(listing["category"]))
+#             l = Listing(title=listing["title"], description=listing["description"],
+#             image=listing["image"], start=int(listing["start"]), lister=u)
+#             l.save()
+#             l.category.add(c)
+#             print(listing)
+#     return render(request, "auctions/create.html", {
+#     "form": ListForm()
+#     })
+
+
 def create(request):
     if request.method == "POST":
-        form = ListForm(request.POST)
+        # Save and add new listing to database
+        form = ListingForm(request.POST)
         if form.is_valid():
             listing = form.cleaned_data
+            print(listing["category"])
             u = User.objects.get(pk=request.user.id)
-            c = Category.objects.get(pk=int(listing["category"]))
+            c = Category.objects.get(category=listing["category"])
             l = Listing(title=listing["title"], description=listing["description"],
-            image=listing["image"], start=int(listing["start"]), lister=u)
+            image=listing["image"], start=int(listing["start"]), lister=u, category=c)
             l.save()
-            l.category.add(c)
-            print(listing)
     return render(request, "auctions/create.html", {
-    "form": ListForm()
+    "form": ListingForm()
+    })
+
+def listings(request):
+    listings = Listing.objects.all()
+    bids = {}
+    for listing in listings:
+        try:
+            bid = listing.BidItems.latest('offer')
+            bids[bid.bid_item.id] = bid
+        except:
+            pass
+    print(bids)
+    #test2 = test.BidItems.all()
+    return render(request, "auctions/listings.html", {
+        "listings": Listing.objects.all()
     })

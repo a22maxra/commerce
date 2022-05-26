@@ -1,11 +1,11 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
-<form method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit">
-</form>
-
+<div class="formClass">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input id="test" class="m-1 btn btn-primary" value="Create" type="submit">
+    </form>
+</div>
 {% endblock %}
