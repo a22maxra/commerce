@@ -19,15 +19,16 @@ class Listing(models.Model):
     start = models.IntegerField()
     lister = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Listings")
     status = models.BooleanField(default = True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
-        return str(self.id)
+        return str(self.title)
 
 class Bid(models.Model):
     offer = models.IntegerField()
     bid_item = models.ForeignKey(Listing, null=True, on_delete=models.CASCADE, related_name="BidItems")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Bids")
     def __str__(self):
-        return str(self.offer)
+        return str(f"{self.offer}$ offer for {self.bid_item} from {self.bidder}")
 
 
 class Comment(models.Model):

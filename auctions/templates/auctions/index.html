@@ -12,6 +12,7 @@
         <div class="col">
             <a href="{% url 'listing' listing.id %}"><h2>{{ listing.title }}</h2></a>
             <p>Category: {{ listing.category }}</p>
+            <p>Published: {{ listing.created_at }}</p>
             {% if bid %}
             <p>Highest Bid: {{ bid }}$</p>
             {% else %}
