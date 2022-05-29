@@ -1,11 +1,13 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}Create{% endblock %}
+
 {% block body %}
 <div class="formClass">
     <form method="POST">
         {% csrf_token %}
         {{ form }}
-        <input id="test" class="m-1 btn btn-primary" value="Create" type="submit">
+        <input class="m-1 btn btn-primary" value="Create" type="submit">
     </form>
 </div>
 {% endblock %}

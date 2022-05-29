@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}Category{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% for listing, bid in stitch %}
+        {% if listing.status %}
+        <div class="row h-15 border border-primary p-3">
+            <div class="col m-3">
+                <a href="{% url 'listing' listing.id %}">
+                    <img width="250" height="150" src="{{ listing.image }}">
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url 'listing' listing.id %}"><h2>{{ listing.title }}</h2></a>
+                <p>Category: {{ listing.category }}</p>
+                {% if bid %}
+                <p>Highest Bid: {{ bid }}$</p>
+                {% else %}
+                <p>Starting Price: {{ listing.start }}$</p>
+                {% endif %}
+            </div>
+            <div class="col">
+                <p>{{ listing.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

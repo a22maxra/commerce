@@ -18,11 +18,13 @@ class Listing(models.Model):
     image = models.CharField(max_length=280, blank=True, null=True)
     start = models.IntegerField()
     lister = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Listings")
-
+    status = models.BooleanField(default = True)
+    def __str__(self):
+        return str(self.id)
 
 class Bid(models.Model):
     offer = models.IntegerField()
-    bid_item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="BidItems")
+    bid_item = models.ForeignKey(Listing, null=True, on_delete=models.CASCADE, related_name="BidItems")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Bids")
     def __str__(self):
         return str(self.offer)

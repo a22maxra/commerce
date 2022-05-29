@@ -5,3 +5,20 @@ body {
 .formClass {
     width: 99%;
 }
+
+.comment {
+    font-size: 1.5em;
+    word-break: break-all;
+}
+
+.commenter {
+    opacity: 50%;
+}
+
+.winner {
+    color: lightgreen;
+}
+
+.bidError {
+    color:red;
+}

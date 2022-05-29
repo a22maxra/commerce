@@ -1,0 +1,76 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col mb-3">
+            <h2>{{ listing.title }}</h2>
+        </div>
+        {% if request.user == bid.bidder and not listing.status %}
+        <div class="col mb-3">
+            <h2 class="winner">You won this auction!</h2>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col">
+            <img width="500" height="300" src="{{ listing.image }}">
+        </div>
+        <div class="col">
+            {% if bid %}
+            <h2>Bid: {{ bid.offer }}$</h2>
+            {% else %}
+            <h2>Starting: {{ listing.start }}$</h2>
+            {% endif %}
+            <p>Listed by {{ listing.lister }}</p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form1 }}
+                <input type="submit" class="{{ buttonClass }}" value="Watchlist">
+            </form>
+            {% if owner %}
+            <form method="POST">
+                {% csrf_token %}
+                {{ formClose }}
+                <input type="submit" class="{{ buttonClassClose }}" value="Close">
+            </form>
+            {% endif %}
+        </div>
+        <div class="col">
+            <p>Category: {{ listing.category }}</p>
+            <p>{{ listing.description }}</p>
+        </div>
+    </div>
+    {% if listing.status %}
+    <div class="row">
+        <div class="col mb-3">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <input class="m-1 btn btn-primary" value="Place Bid" type="submit">
+            </form>
+            <p class="bidError">{{ bidError }}</p>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col mb-3">
+            <form method="POST">
+                {% csrf_token %}
+                {{ formComment }}
+                <input class="m-1 btn btn-primary" value="Comment" type="submit">
+            </form>
+        </div>
+    </div>
+    {% for comment in comments %}
+    <div class="row mb-3 mt-3 border border-secondary">
+        <div class="comment col-12 mt-2">
+            <p>{{ comment.message}} </p>
+        </div>
+        <div class="col">
+            <p class="commenter">Written by {{ comment.commenter}} </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
